@@ -594,6 +594,27 @@ const RubiksCube = () => {
     }
   };
 
+  function useMediaQuery(query) {
+    const [matches, setMatches] = useState(false);
+  
+    useEffect(() => {
+      const media = window.matchMedia(query);
+      
+      if (media.matches !== matches) {
+        setMatches(media.matches);
+      }
+  
+      const listener = () => setMatches(media.matches);
+      media.addEventListener('change', listener);
+      
+      return () => media.removeEventListener('change', listener);
+    }, [matches, query]);
+  
+    return matches;
+  }
+
+  const isMobile = useMediaQuery('(max-width: 768px)')
+
   return (
     <div
       style={{
@@ -606,7 +627,7 @@ const RubiksCube = () => {
     >
       <div ref={containerRef} style={{ width: '100%', height: '100%' }} />
 
-      <div
+      {!isMobile && <div
         style={{
           position: 'absolute',
           top: 20,
@@ -691,9 +712,9 @@ const RubiksCube = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div>}
 
-      <div
+      {!isMobile && <div
         style={{
           position: 'absolute',
           top: 20,
@@ -775,7 +796,7 @@ const RubiksCube = () => {
             🔄 重置魔方
           </button>
         </div>
-      </div>
+      </div>}
     </div>
   );
 };
